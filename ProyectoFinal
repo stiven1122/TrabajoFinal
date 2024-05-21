@@ -1,1 +1,166 @@
+public class Listas2 {
+
+    private Nodo cabeza = null;
+
+    public class Nodo {
+        private int valor;
+        private Nodo sig;
+
+        public Nodo(int valor, Nodo sig) {
+            this.valor = valor;
+            this.sig = sig;
+        }
+
+        public int getValor() {
+            return valor;
+        }
+
+        public Nodo getSig() {
+            return sig;
+        }
+
+        public void setValor(int valor) {
+            this.valor = valor;
+        }
+
+        public void setSig(Nodo sig) {
+            this.sig = sig;
+        }
+    }
+
+    // Insertar un Nodo en una Posición Específica
+    public void insertarEnPosicion(int valor, int posicion) {
+        Nodo nuevo = new Nodo(valor, null);
+        if (cabeza == null) {
+            cabeza = nuevo;
+            nuevo.setSig(cabeza);
+        } else {
+            Nodo actual = cabeza;
+            int contador = 0;
+            while (contador < posicion - 1 && actual.getSig() != cabeza) {
+                actual = actual.getSig();
+                contador++;
+            }
+            nuevo.setSig(actual.getSig());
+            actual.setSig(nuevo);
+        }
+    }
+
+    // Eliminar Nodos con un Valor Específico
+    public void eliminarPorValor(int valor) {
+        if (cabeza == null) return;
+        Nodo actual = cabeza;
+        Nodo anterior = null;
+        do {
+            if (actual.getValor() == valor) {
+                if (anterior == null) {
+                    Nodo temp = cabeza;
+                    while (temp.getSig() != cabeza) {
+                        temp = temp.getSig();
+                    }
+                    if (cabeza == cabeza.getSig()) {
+                        cabeza = null;
+                    } else {
+                        temp.setSig(cabeza.getSig());
+                        cabeza = cabeza.getSig();
+                    }
+                } else {
+                    anterior.setSig(actual.getSig());
+                }
+                return;
+            }
+            anterior = actual;
+            actual = actual.getSig();
+        } while (actual != cabeza);
+    }
+
+    // Invertir la Lista
+    public void invertir() {
+        if (cabeza == null || cabeza.getSig() == cabeza) return;
+
+        Nodo actual = cabeza;
+        Nodo anterior = null;
+        Nodo siguiente = cabeza.getSig(); // Primer nodo después de la cabeza
+
+        do {
+            actual.setSig(anterior); // Reversa el enlace
+            anterior = actual;
+            actual = siguiente;
+            siguiente = actual.getSig(); // Mueve al siguiente nodo
+        } while (actual != cabeza);
+
+        cabeza.setSig(anterior); // Completa el ciclo
+        cabeza = anterior; // Ajusta la cabeza al nuevo inicio
+    }
+
+    // Encontrar y devolver el valor mínimo y máximo en una lista circular
+    public int[] encontrarMinMax() {
+        if (cabeza == null) return new int[]{-1, -1}; // Si la lista está vacía
+        int min = cabeza.getValor();
+        int max = cabeza.getValor();
+        Nodo actual = cabeza.getSig();
+        while (actual != cabeza) {
+            if (actual.getValor() < min) min = actual.getValor();
+            if (actual.getValor() > max) max = actual.getValor();
+            actual = actual.getSig();
+        }
+        return new int[]{min, max};
+    }
+
+    // Método para mostrar la lista (para pruebas)
+    public void mostrarLista() {
+        if (cabeza == null) {
+            System.out.println("Lista vacía");
+            return;
+        }
+        Nodo actual = cabeza;
+        do {
+            System.out.print(actual.getValor() + " , ");
+            actual = actual.getSig();
+        } while (actual != cabeza);
+        System.out.println();
+    }
+
+    // Método para cambiar el valor de un nodo en una posición específica
+    public void cambiarValorEnPosicion(int posicion, int nuevoValor) {
+        if (cabeza == null) return;
+        Nodo actual = cabeza;
+        int contador = 0;
+        do {
+            if (contador == posicion) {
+                actual.setValor(nuevoValor);
+                return;
+            }
+            actual = actual.getSig();
+            contador++;
+        } while (actual != cabeza);
+    }
+
+    public static void main(String[] args) {
+        Scanner datos = new Scanner(System.in);
+        ArrayList <Integer> numeros = new ArrayList<>();
+        int numero;
+        Listas2 lista = new Listas2();
+        //System.out.println("Ingresa 3 numeros: ");
+       // for (int i = 0 ; i >= 3; i++){numero = datos.nextInt();numeros.add(numeros)}
+        lista.insertarEnPosicion(7, 0);
+        lista.insertarEnPosicion(8, 1);
+        lista.insertarEnPosicion(9, 2);
+        lista.mostrarLista();
+
+        lista.eliminarPorValor(2);
+        lista.mostrarLista();
+
+        lista.invertir();
+        lista.mostrarLista();
+
+        int[] minMax = lista.encontrarMinMax();
+        System.out.println("Min: " + minMax[0] + ", Max: " + minMax[1]);
+
+        // Cambiar valores en posiciones específicas
+        lista.cambiarValorEnPosicion(0, 1); // Cambia el valor en la posición 0 a 5
+        lista.cambiarValorEnPosicion(1, 2); // Cambia el valor en la posición 1 a 6
+        lista.mostrarLista();
+    }
+}
 
